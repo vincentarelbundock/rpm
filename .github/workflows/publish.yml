@@ -1,0 +1,88 @@
+name: Publish RPM repository
+
+# The repository is rebuilt from scratch on every run: each project's latest
+# release is fetched, signed, indexed, then the whole tree is deployed to
+# GitHub Pages. Nothing is incremental and nothing binary is committed, so a
+# bad build is fixed by rerunning rather than by undoing a commit.
+on:
+  schedule:
+    # Nightly. This is the backstop: a project whose release workflow sends
+    # the repository_dispatch below appears within minutes, and one that does
+    # not appears within a day.
+    - cron: "37 6 * * *"
+  repository_dispatch:
+    types: [upstream-release]
+  workflow_dispatch:
+  push:
+    branches: [main]
+    # Only when the description of the repository changes. A README edit
+    # should not redeploy packages.
+    paths:
+      - projects.json
+      - packaging/**
+      - scripts/**
+      - site/**
+      - .github/workflows/publish.yml
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A nightly run and a release dispatch can collide. Let the later one win
+# rather than deploying a stale tree over a fresh one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tooling
+        env:
+          NFPM_VERSION: 2.47.0
+          NFPM_SHA256: 0660ca602b2d2d2ae4781a06c692b3eeb9d437ffea05b831d76e41f4a3188783
+        run: |
+          set -eu
+          sudo apt-get update
+          # `rpm` provides rpmsign.
+          sudo apt-get install -y createrepo-c rpm jq
+          # Pinned and hash-checked: a replaced upstream asset should fail the
+          # build rather than sign packages built by an unverified tool.
+          url="https://github.com/goreleaser/nfpm/releases/download/v${NFPM_VERSION}/nfpm_${NFPM_VERSION}_Linux_x86_64.tar.gz"
+          curl -fsSL -o /tmp/nfpm.tar.gz "$url"
+          echo "${NFPM_SHA256}  /tmp/nfpm.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/nfpm.tar.gz -C /tmp nfpm
+          sudo install -m755 /tmp/nfpm /usr/local/bin/nfpm
+
+      - name: Build the repository
+        env:
+          # Read-only: the script only lists and downloads public releases.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RPM_GPG_PRIVATE_KEY: ${{ secrets.RPM_GPG_PRIVATE_KEY }}
+          RPM_GPG_PASSPHRASE: ${{ secrets.RPM_GPG_PASSPHRASE }}
+        run: ./scripts/build-repo.sh
+
+      # Installs from the freshly built tree before it is published, inside a
+      # Fedora container, so a broken index or a bad signature fails here
+      # instead of on a user's machine.
+      - name: Verify the repository installs
+        run: ./scripts/verify-repo.sh
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,4 @@
+# The built repository. Assembled from upstream releases on every run and
+# deployed straight to Pages, so it is never committed.
+public/
+.work/

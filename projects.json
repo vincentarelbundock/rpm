@@ -1,0 +1,48 @@
+{
+  "comment": [
+    "Every package served by the repository, in one list.",
+    "",
+    "`rpm_pattern` names an asset that the upstream release already publishes;",
+    "when it is present the repository serves those exact bytes (plus a",
+    "signature) and never repackages, so a project that states its own",
+    "dependencies keeps them.",
+    "",
+    "`nfpm` names a template in packaging/ instead, for a project that publishes",
+    "only cargo-dist tarballs. The .rpm is then built here from the released",
+    "binary. Moving a project from the second form to the first is a matter of",
+    "deleting its `nfpm` line once its own release workflow grows packaging.",
+    "",
+    "`arches` maps an RPM architecture to the cargo-dist target triple, and",
+    "doubles as the list of architectures to attempt. A missing asset is a",
+    "skip with a warning, not a failure: upstream may not build that arch yet."
+  ],
+
+  "projects": [
+    {
+      "name": "calepin",
+      "repo": "vincentarelbundock/calepin",
+      "rpm_pattern": "calepin-*.ARCH.rpm",
+      "arches": {
+        "x86_64": "x86_64-unknown-linux-gnu",
+        "aarch64": "aarch64-unknown-linux-gnu"
+      }
+    },
+    {
+      "name": "pulpit",
+      "repo": "vincentarelbundock/pulpit",
+      "rpm_pattern": "pulpit-*.ARCH.rpm",
+      "arches": {
+        "x86_64": "x86_64-unknown-linux-gnu"
+      }
+    },
+    {
+      "name": "scrutin",
+      "repo": "vincentarelbundock/scrutin",
+      "nfpm": "packaging/scrutin.nfpm.yaml",
+      "arches": {
+        "x86_64": "x86_64-unknown-linux-gnu",
+        "aarch64": "aarch64-unknown-linux-gnu"
+      }
+    }
+  ]
+}

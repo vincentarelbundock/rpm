@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vab RPM repository</title>
+<style>
+  :root { color-scheme: light dark; --fg: #1a1a1a; --bg: #fdfdfc; --muted: #5f5f5c; --line: #e0dfdb; --code-bg: #f4f3f0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fg: #e8e6e1; --bg: #1a1a19; --muted: #9c9a94; --line: #33322f; --code-bg: #232322; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0 auto; padding: 3rem 1.25rem 5rem; max-width: 46rem; background: var(--bg); color: var(--fg);
+         font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
+  h2 { font-size: 1.05rem; margin: 2.5rem 0 .75rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  p.lede { color: var(--muted); margin: 0 0 2rem; }
+  pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px;
+        padding: .9rem 1rem; overflow-x: auto; font-size: .875rem; line-height: 1.5; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  p code { background: var(--code-bg); padding: .1rem .3rem; border-radius: 3px; font-size: .9em; }
+  table { border-collapse: collapse; width: 100%; font-size: .925rem; }
+  th, td { text-align: left; padding: .5rem .75rem .5rem 0; border-bottom: 1px solid var(--line); }
+  th { font-weight: 600; }
+  a { color: inherit; }
+  p.warn { border-left: 3px solid #c08a2e; background: color-mix(in srgb, #c08a2e 8%, transparent);
+           padding: .75rem 1rem; border-radius: 0 4px 4px 0; margin: 0 0 1rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+</style>
+</head>
+<body>
+
+<h1>vab RPM repository</h1>
+<p class="lede">Fedora packages for a few command-line tools, rebuilt nightly from their GitHub releases.</p>
+
+<!--INSTALL-SNIPPET-->
+
+<h2>Install</h2>
+<pre><code>sudo dnf install calepin
+sudo dnf install scrutin
+sudo dnf install pulpit</code></pre>
+<p>After that, <code>sudo dnf upgrade</code> picks up new versions.</p>
+
+<h2>What is here</h2>
+<table>
+  <tr><th>Package</th><th>What it does</th><th>Architectures</th></tr>
+  <tr><td><a href="https://github.com/vincentarelbundock/calepin">calepin</a></td>
+      <td>Typst-native computational notebooks</td><td>x86_64, aarch64</td></tr>
+  <tr><td><a href="https://github.com/vincentarelbundock/scrutin">scrutin</a></td>
+      <td>Quality dashboard, file watcher, parallel test runner</td><td>x86_64, aarch64</td></tr>
+  <tr><td><a href="https://github.com/vincentarelbundock/pulpit">pulpit</a></td>
+      <td>PDF presenter built for real projectors</td><td>x86_64</td></tr>
+</table>
+
+<h2>Notes</h2>
+<p>The packages here are the same binaries published on each project's GitHub
+releases page. This repository does not build them; it fetches, indexes and
+signs them, which is what lets <code>dnf upgrade</code> notice a new version
+instead of you checking a releases page by hand.</p>
+
+<p>Only stable releases are served. Prereleases stay on GitHub.</p>
+
+<p>RHEL, Rocky and AlmaLinux 9: the repository works there, but calepin and
+pulpit currently need a newer glibc than EL9 ships (2.35 vs 2.34), so they
+install and then fail at startup. scrutin works.</p>
+
+<p>Debian and Ubuntu users: see the
+<a href="https://vincentarelbundock.github.io/apt">apt repository</a>.</p>
+
+<footer>
+  Built from <a href="https://github.com/vincentarelbundock/rpm">vincentarelbundock/rpm</a>.
+</footer>
+
+</body>
+</html>
