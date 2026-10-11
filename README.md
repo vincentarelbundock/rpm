@@ -45,8 +45,9 @@ to check others), so it needs `docker`. CI runs both.
 
 ## EL9 support
 
-Not yet. Rocky, Alma and RHEL 9 ship glibc 2.34, and calepin and pulpit are
-built against 2.35 or newer, so they install there but fail at startup.
-scrutin works. The fix belongs upstream (build the Linux binaries against an
-older glibc); once it lands, add `rockylinux/rockylinux:9` to the default
-`VERIFY_IMAGES` in `scripts/verify-repo.sh`.
+Not yet. Rocky, Alma and RHEL 9 ship glibc 2.34, and calepin, pulpit,
+dadrock and dadrock-desktop are built against 2.35 or newer, so they install
+there but fail at startup. scrutin works. The fix belongs upstream (build the
+Linux binaries against an older glibc); once it lands, add
+`rockylinux/rockylinux:9` to the default `VERIFY_IMAGES` in
+`scripts/verify-repo.sh`.

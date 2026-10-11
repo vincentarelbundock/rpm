@@ -43,6 +43,24 @@
         "x86_64": "x86_64-unknown-linux-gnu",
         "aarch64": "aarch64-unknown-linux-gnu"
       }
+    },
+    {
+      "name": "dadrock",
+      "repo": "vincentarelbundock/dadr",
+      "rpm_pattern": "dadrock-[0-9]*.ARCH.rpm",
+      "arches": {
+        "x86_64": "x86_64-unknown-linux-gnu",
+        "aarch64": "aarch64-unknown-linux-gnu"
+      }
+    },
+    {
+      "name": "dadrock-desktop",
+      "repo": "vincentarelbundock/dadr",
+      "rpm_pattern": "dadrock-desktop-*.ARCH.rpm",
+      "arches": {
+        "x86_64": "x86_64-unknown-linux-gnu",
+        "aarch64": "aarch64-unknown-linux-gnu"
+      }
     }
   ]
 }

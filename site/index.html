@@ -38,7 +38,9 @@
 <h2>Install</h2>
 <pre><code>sudo dnf install calepin
 sudo dnf install scrutin
-sudo dnf install pulpit</code></pre>
+sudo dnf install pulpit
+sudo dnf install dadrock
+sudo dnf install dadrock-desktop</code></pre>
 <p>After that, <code>sudo dnf upgrade</code> picks up new versions.</p>
 
 <h2>What is here</h2>
@@ -50,6 +52,10 @@ sudo dnf install pulpit</code></pre>
       <td>Quality dashboard, file watcher, parallel test runner</td><td>x86_64, aarch64</td></tr>
   <tr><td><a href="https://github.com/vincentarelbundock/pulpit">pulpit</a></td>
       <td>PDF presenter built for real projectors</td><td>x86_64</td></tr>
+  <tr><td><a href="https://github.com/vincentarelbundock/dadr">dadrock</a></td>
+      <td>Data Analysis Decision Records: CLI and local review UI</td><td>x86_64, aarch64</td></tr>
+  <tr><td><a href="https://github.com/vincentarelbundock/dadr">dadrock-desktop</a></td>
+      <td>The dadrock review UI in a desktop window (WebKitGTK)</td><td>x86_64, aarch64</td></tr>
 </table>
 
 <h2>Notes</h2>
@@ -60,9 +66,9 @@ instead of you checking a releases page by hand.</p>
 
 <p>Only stable releases are served. Prereleases stay on GitHub.</p>
 
-<p>RHEL, Rocky and AlmaLinux 9: the repository works there, but calepin and
-pulpit currently need a newer glibc than EL9 ships (2.35 vs 2.34), so they
-install and then fail at startup. scrutin works.</p>
+<p>RHEL, Rocky and AlmaLinux 9: the repository works there, but calepin,
+pulpit, dadrock and dadrock-desktop currently need a newer glibc than EL9 ships
+(2.35 vs 2.34), so they install and then fail at startup. scrutin works.</p>
 
 <p>Debian and Ubuntu users: see the
 <a href="https://vincentarelbundock.github.io/apt">apt repository</a>.</p>
