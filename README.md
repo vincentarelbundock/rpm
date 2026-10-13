@@ -35,6 +35,13 @@ trailing `!`); the primary stays in the offline backup. Packages are signed
 the secret, the build publishes unsigned with a loud warning, and the
 generated `vab.repo` turns both checks off.
 
+The signing subkey's ID is `D9E85F8AA77D837C`, and that, not the primary's
+`C99967CA`, is what `rpm -K` prints for a package. Before the key is imported
+it reports `NOKEY` against the subkey ID, which looks like a key mismatch but
+is not: the published `RPM-GPG-KEY-vab` carries the subkey, and after
+`rpm --import` the same check reports `OK` against the primary fingerprint.
+The landing page states the subkey ID from the key that actually signed.
+
 ## Testing locally
 
 `scripts/build-repo.sh` needs `jq`, `gh`, `nfpm` and `createrepo_c`, plus

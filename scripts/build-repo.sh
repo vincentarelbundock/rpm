@@ -200,6 +200,10 @@ if [ -n "${RPM_GPG_PRIVATE_KEY:-}" ]; then
   # Spaced in groups of four, the way gpg and dnf print it, so readers can
   # compare it against dnf's import prompt by eye.
   fingerprint="$(printf %s "$primary" | sed 's/.\{4\}/& /g; s/ $//')"
+  # The key ID rpm -K prints for the package signature: the subkey's when a
+  # subkey signs, in rpm's lowercase. Named on the landing page because it
+  # differs from the primary's and otherwise looks like the wrong key.
+  subkey_id="$(printf %s "${signkey%!}" | tr 'A-F' 'a-f')"
   signed=1
   echo "  packages signed with $signkey"
 else
@@ -260,6 +264,12 @@ if [ "$signed" -eq 1 ]; then
 <p>dnf asks you to confirm the signing key the first time it installs from
 here. Its fingerprint is
 <code>@FINGERPRINT@</code>.</p>
+<p>The packages themselves are signed with a subkey of that key, ID
+<code>@SUBKEY@</code>, which is what <code>rpm -K</code> prints. Before the
+key is imported, <code>rpm -K</code> cannot tie that subkey to anything and
+reports <code>NOKEY</code>; after
+<code>sudo rpm --import https://vincentarelbundock.github.io/rpm/RPM-GPG-KEY-vab</code>
+(or the first <code>dnf install</code>), it reports <code>OK</code>.</p>
 HTML
 else
   cat > "$work/install.html" <<'HTML'
@@ -274,7 +284,7 @@ own releases page instead.</p>
 HTML
 fi
 
-[ "$signed" -eq 1 ] && sed -i "s/@FINGERPRINT@/$fingerprint/" "$work/install.html"
+[ "$signed" -eq 1 ] && sed -i "s/@FINGERPRINT@/$fingerprint/; s/@SUBKEY@/$subkey_id/" "$work/install.html"
 
 # Splice it in, then drop the placeholder line itself.
 awk -v f="$work/install.html" '
